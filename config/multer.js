@@ -2,19 +2,16 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 
-// Upload folder
 const uploadDir = "uploads/";
 
-// Create folder if not exists
+// Create uploads folder if not exists
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-// Multer storage configuration
+// Storage config
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir);
-  },
+  destination: (req, file, cb) => cb(null, uploadDir),
   filename: (req, file, cb) => {
     const ext = path.extname(file.originalname);
     const name = `${file.fieldname}-${Date.now()}${ext}`;
@@ -22,10 +19,10 @@ const storage = multer.diskStorage({
   },
 });
 
-// Multer instance (accept any file type)
+// Multer instance
 const upload = multer({
   storage,
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB limit
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB
 });
 
 export default upload;

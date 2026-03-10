@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import applyRoutes from "./router/apply.js";
-import db from "./db/applydb.js"; // import the database connection
+import sequelize from "./db/sequelize.js";
 
 dotenv.config();
 
@@ -16,7 +16,17 @@ app.use("/uploads", express.static("uploads"));
 // Routes
 app.use("/api/apply", applyRoutes);
 
+// Start server & sync DB
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+
+sequelize
+  .sync({ alter: true }) // creates table if not exists
+  .then(() => {
+    console.log("Database CONNECTED");
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  })
+  .catch(err => {
+    console.error("Database sync failed:", err);
+  });
