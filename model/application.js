@@ -18,7 +18,7 @@ const Application = sequelize.define(
     budget: { type: DataTypes.STRING, allowNull: true },
     country: { type: DataTypes.STRING, allowNull: true },
     academicStatus: { type: DataTypes.STRING, allowNull: true },
-    documents: { type: DataTypes.JSON, allowNull: true }, // store uploaded files info
+    documents: { type: DataTypes.JSON, allowNull: true },
   },
   {
     tableName: "applications",

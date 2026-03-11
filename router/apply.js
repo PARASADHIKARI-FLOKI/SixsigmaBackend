@@ -1,25 +1,28 @@
 import express from "express";
 import upload from "../config/multer.js";
-import Application from "../model/application.js";
+import Application from "../model/Application.js";
 
 const router = express.Router();
 
-// POST route for application submission
 router.post("/", upload.any(), async (req, res) => {
   try {
     const formData = req.body;
 
-    // Map uploaded files to JSON
-    const documents = {};
-    req.files.forEach(file => {
-      documents[file.fieldname] = {
-        filename: file.filename,
-        path: file.path,
-        mimetype: file.mimetype,
-      };
-    });
+    // Convert date strings to proper format if needed
+    if (formData.dob) formData.dob = new Date(formData.dob);
 
-    // Save to database
+    // Map uploaded files
+    const documents = {};
+    if (req.files) {
+      req.files.forEach(file => {
+        documents[file.fieldname] = {
+          filename: file.filename,
+          path: file.path,
+          mimetype: file.mimetype,
+        };
+      });
+    }
+
     const application = await Application.create({
       ...formData,
       documents,
